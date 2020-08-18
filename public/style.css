@@ -1,0 +1,56 @@
+body {
+    margin: 0;
+    margin-top: 50px;
+    text-align: center;
+    font-family: 'Roboto';
+}
+
+#form-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#file-container {
+    display: flex;
+    justify-content: center;   
+    flex-direction: row;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid rgb(172, 172, 172);
+    border-radius: 5px;
+    width: 500px;
+
+    padding: 20px;
+}
+
+input {
+    margin: 5px 2px;
+    background-color: whitesmoke;
+    border: 0.5px solid rgb(224, 224, 224);
+    border-radius: 3px;
+    text-decoration: none;
+    padding: 10px;
+    transition: 0.2s;
+}
+
+input:active {
+    background-color: rgb(85, 41, 114);
+    color: white;
+}
+
+input:hover {
+    border: 1px solid rgb(180, 68, 255);
+}
+
+input[type=reset] {
+    width: 20%;
+}
+
+input[type=submit] {
+    width: 80%;
+}
