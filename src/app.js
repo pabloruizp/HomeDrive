@@ -9,6 +9,9 @@ const {google} = require('googleapis');
 var emoji = require('node-emoji')
 var colors = require('colors');
 
+
+var connectionError = false;
+
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // The file token.json stores the user's access and refresh tokens, and is
@@ -25,58 +28,69 @@ function loopUpload() {
     });
 }
 
-function uploadFiles(auth) {
+async function uploadFiles(auth) {
     const drive = google.drive({version: 'v3', auth});
 
-    fs.readdir(path.resolve(__dirname, '../files'), function (err, files) {
-        //handling error
-        if (err) {
-            return console.log('Unable to scan directory: ' + err);
-        } 
+    var err, files = fs.readdirSync(path.resolve(__dirname, '../files')); 
 
-        if(files.length == 0) {
-            //console.log("[x] No files to upload".red)
+    //handling error
+    if (err) {
+        return console.log('Unable to scan directory: ' + err);
+    } 
+
+    if(files.length == 0) {
+        //console.log("[x] No files to upload".red)
+    }
+
+
+    for(let i = 0; i < files.length; i++) {
+      console.log(i);
+      var fileMetadata = {
+        'name': files[i],
+        parents: ['1SIzqKYymoCZ98K5OxQ1PNProo50FTzFe']
+      };
+
+      var media = {
+        body: fs.createReadStream(path.resolve(__dirname, '../files/' + files[i]))
+      };
+
+      try {
+
+      await drive.files.create({
+          resource: fileMetadata,
+          media: media,
+          fields: 'name'
+        });
+      } catch (error) {
+        // Handle error
+        if(!connectionError) {
+          console.log("[x] Error uploading the files to Google Drive".bold.red) 
         }
+        connectionError = true;
+        break;
+      }         
+          
+      connectionError = false;
 
-        var i = 1;
-        //listing all files using forEach
-        files.forEach(function (file) {
-            // parents is an example folder of my drive
-            var fileMetadata = {
-                'name': file,
-                parents: ['1SIzqKYymoCZ98K5OxQ1PNProo50FTzFe']
-              };
-              var media = {
-                body: fs.createReadStream(path.resolve(__dirname, '../files/' + file))
-              };
-              drive.files.create({
-                resource: fileMetadata,
-                media: media,
-                fields: 'name'
-              }, function (err, fileUploaded) {
-                if (err) {
-                  // Handle error
-                  console.error(err);
-                } else {
-                  fs.unlink(path.resolve(__dirname, '../files/' + file), (err) => {
-                      if(err) {
-                          console.log(err)
-                      }
-                  });
-                }
-            
-                if (i == files.length) {
-                    console.log("[x] All files have been uploaded to Google Drive".brightGreen)
-                }
+      if (i == 0) {
+        console.log("[ ] Uploading files to Google Drive".bold.brightGreen)
+      } 
 
-                i++;    
-              });
+      console.log("    > ".green + files[i].bold.green + " uploaded".green)
 
-        });        
+      if (i == (files.length - 1)) {
+        console.log("[x] All files have been uploaded to Google Drive".bold.brightGreen)
+      }
 
-        setTimeout(loopUpload, 30000)
+      try {
+        err = fs.unlinkSync(path.resolve(__dirname, '../files/' + files[i]));
+      } catch (error) {
+        undefined
+      }
 
-    });      
+    }  
+    
+    setTimeout(loopUpload, 30000)
 }
 
 /**
