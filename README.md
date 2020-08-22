@@ -4,7 +4,7 @@
 
 dump2drive is a tool that helps you to organize all your local files into Google Drive using simple codes naming  
 
-![](./images/demo.gif)
+<img src='./images/screenshot.png' style='width: 100%;'>
 
 ## Prerequisites
 * [Node.js & npm](https://nodejs.org/es/)
