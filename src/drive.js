@@ -32,9 +32,10 @@ function dump2drive() {
  */
 async function rootDir(auth) {
 
-  let err, content = fs.readFileSync(path.resolve(__dirname, '../rootID.txt'),'utf8');
-  
-  if (err) {
+  try {
+    let content = fs.readFileSync(path.resolve(__dirname, '../rootID.txt'),'utf8');
+    return content;
+  } catch (error) {
     const drive = google.drive({version: 'v3', auth});
 
     var fileMetadata = {
@@ -46,15 +47,10 @@ async function rootDir(auth) {
                     fields: 'id'
     });
 
-    fs.writeFile(path.resolve(__dirname, '../rootID.txt'), folder.data.id, (err) => {
-      if(err) {
-        console.log("Error creating the rootID file")
-      }
-      return folder.data.id;
-    })
+    fs.writeFileSync(path.resolve(__dirname, '../rootID.txt'), folder.data.id)
 
-  } else {
-    return content;
+    return folder.data.id;
+
   }
 
 }
