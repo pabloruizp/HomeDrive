@@ -34,7 +34,7 @@ Once you get the credentials.json file, store it into the dump2drive folder.
 ## Code System
 All the tool is based on a code system. The code **MUST** be added between [ ]
 ### Folders
-The idea is to add a code at the begining of your Drive folders. The code should be short and easy to remember.
+The idea is to add a code at the begining of your Drive folders. The code should be short and easy to remember. **All folders** must be inside a folder called **dump2drive** that has been created the first time you execute the program.
 ### Files
 The local files will also have a code. This code must be a code composition of the Drive directories.
 ### Example
