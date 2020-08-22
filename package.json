@@ -1,5 +1,5 @@
 {
-  "name": "homedrive",
+  "name": "dump2drive",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -9,20 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/pabloruizp/HomeDrive.git"
+    "url": "git+ssh://git@github.com/pabloruizp/dump2drive.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pabloruizp/HomeDrive/issues"
+    "url": "https://github.com/pabloruizp/dump2drive/issues"
   },
-  "homepage": "https://github.com/pabloruizp/HomeDrive#readme",
+  "homepage": "https://github.com/pabloruizp/dump2drive#readme",
   "dependencies": {
     "colors": "^1.4.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "googleapis": "^39.2.0",
-    "morgan": "^1.10.0",
     "node-emoji": "^1.10.0"
   },
   "devDependencies": {

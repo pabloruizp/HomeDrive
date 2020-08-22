@@ -1,0 +1,3 @@
+#! /bin/bash
+cd ~/dump2drive
+npm start --silent
