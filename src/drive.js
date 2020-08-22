@@ -112,12 +112,13 @@ async function uploadFiles(auth) {
 
       if (parenID == null) { continue; }
       // Info of the file to upload
+      let filePath = path.resolve(__dirname, '../files/' + files[i]);
       var fileMetadata = {
         'name': files[i],
         parents: [parenID]
       };
       var media = {
-        body: fs.createReadStream(path.resolve(__dirname, '../files/' + files[i]))
+        body: fs.createReadStream(filePath)
       };
       // Uploads the file to Drive
       try {
@@ -143,7 +144,7 @@ async function uploadFiles(auth) {
 
       // Deletes the file that has been uploaded to Drive
       try {
-        err = fs.unlinkSync(path.resolve(__dirname, '../files/' + files[i]));
+        err = fs.unlinkSync(filePath);
       } catch (error) {
         undefined
       }
