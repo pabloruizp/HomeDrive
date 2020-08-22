@@ -7,6 +7,7 @@ var colors = require('colors');
 
 // Variable to check if the error msg has been shown
 var connectionError = false;
+var rootID = '';
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -22,6 +23,40 @@ function dump2drive() {
       // Authorize a client with credentials, then call the Google Drive API.
       authorize(JSON.parse(content), uploadFiles);
   });
+}
+
+/**
+ * Function to get the dump2drive folder id. If the rootID.txt file don't exists, the dump2drive
+ * folder will be created on your drive.
+ * @param {Object} auth The authorization of the API
+ */
+async function rootDir(auth) {
+
+  let err, content = fs.readFileSync(path.resolve(__dirname, '../rootID.txt'),'utf8');
+  
+  if (err) {
+    const drive = google.drive({version: 'v3', auth});
+
+    var fileMetadata = {
+      'name': 'dump2drive',
+      'mimeType': 'application/vnd.google-apps.folder'
+    };
+    let folder = await drive.files.create({
+                    resource: fileMetadata,
+                    fields: 'id'
+    });
+
+    fs.writeFile(path.resolve(__dirname, '../rootID.txt'), folder.data.id, (err) => {
+      if(err) {
+        console.log("Error creating the rootID file")
+      }
+      return folder.data.id;
+    })
+
+  } else {
+    return content;
+  }
+
 }
 
 /**
@@ -44,7 +79,7 @@ async function searchDir(auth, fileName) {
   }
 
   // Parent used as an example (CHANGE)
-  var previousParent = '1SIzqKYymoCZ98K5OxQ1PNProo50FTzFe'
+  var previousParent = await rootDir(auth);
 
   do {
     try {
@@ -95,6 +130,9 @@ async function searchDir(auth, fileName) {
  */
 async function uploadFiles(auth) {
     const drive = google.drive({version: 'v3', auth});
+
+    await rootDir(auth);
+
     var err, files = fs.readdirSync(path.resolve(__dirname, '../files')); 
 
     if (err) {

@@ -3,6 +3,7 @@ files/
 
 credentials.json
 token.json
+rootID.txt
 
 # Logs
 logs
