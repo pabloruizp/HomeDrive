@@ -26,18 +26,20 @@ function dump2drive() {
 }
 
 /**
- * Function to get the dump2drive folder id. If the rootID.txt file don't exists, the dump2drive
+ * Function to get the dump2drive folder id. If the folder don't exists, the dump2drive
  * folder will be created on your drive.
  * @param {Object} auth The authorization of the API
  */
 async function rootDir(auth) {
 
-  try {
-    let content = fs.readFileSync(path.resolve(__dirname, '../rootID.txt'),'utf8');
-    return content;
-  } catch (error) {
-    const drive = google.drive({version: 'v3', auth});
-
+  const drive = google.drive({version: 'v3', auth});
+  // Searchs on your drive a folder with the name 'dump2drive'
+  var rootFolder = await drive.files.list({
+    q: "mimeType = 'application/vnd.google-apps.folder' and name = 'dump2drive' and trashed = false",
+    fields: ' files(id, name)',
+  });
+  // If the folder doesn't exist, it creates it
+  if(rootFolder.data.files.length == 0) {
     var fileMetadata = {
       'name': 'dump2drive',
       'mimeType': 'application/vnd.google-apps.folder'
@@ -46,13 +48,9 @@ async function rootDir(auth) {
                     resource: fileMetadata,
                     fields: 'id'
     });
-
-    fs.writeFileSync(path.resolve(__dirname, '../rootID.txt'), folder.data.id)
-
-    return folder.data.id;
-
+    return folder.id
   }
-
+  return rootFolder.data.files[0].id;
 }
 
 /**

@@ -17,6 +17,20 @@ body {
     flex-direction: row;
 }
 
+header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 40px;
+}
+
+#subheader {
+    color: rgb(112, 112, 112);
+    width: 500px;
+    margin: auto;
+}
+
 form {
     display: flex;
     justify-content: center;
